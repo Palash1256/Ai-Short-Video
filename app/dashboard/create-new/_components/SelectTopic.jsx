@@ -25,18 +25,14 @@ const SelectTopic = ({onUserSelect}) => {
   return (
     <div>
       <h2 className="font-bold text-2xl text-primary">Content</h2>
-      <p className="text-gray-500">What is topic of your vedio?</p>
-      <Select onValueChange={(value) => {setSelectedOption(value)
+      <p className="text-gray-500">What is the topic of your video?</p>
+      <Select onValueChange={(value) => {
+        setSelectedOption(value)
         value!='Custom Prompt' && onUserSelect('topic',value)
       }}>
-        <SelectTrigger className="w-full mt-2 p- text-lg">
+        <SelectTrigger className="w-full mt-2 p- text-lg" required>
           <SelectValue placeholder="Content Type" />
         </SelectTrigger>
-        {/* <SelectContent>
-          {options.map((item, index) => {
-            <SelectItem value={item} key={index}>{item}</SelectItem>;
-          })}
-        </SelectContent> */}
         <SelectContent>
           {options.map((item, index) => (
             <SelectItem key={index} value={item}>
