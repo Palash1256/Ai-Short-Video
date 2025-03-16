@@ -1,17 +1,24 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import SelectTopic from './_components/SelectTopic';
 import SelectStyle from './_components/SelectStyle';
 import SelectDuration from './_components/SelectDuration';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
 import CustomLoading from './_components/CustomLoading';
+import { v4 as uuidv4 } from 'uuid';
+import { VideoDataContext } from '@/app/_context/VideoDataContext';
 
 function CreateNew() {
+    try{
     const [formData, setFormData] = useState({});
     const [isFormValid, setFormValid] = useState(false);
     const [loading,setloading]=useState(false);
-    const [videoScript,setVideoScript]=useState(false);
+    const [videoScript,setVideoScript]=useState([]);
+    const [audioFileUrl,setAudioFileUrl]=useState()
+    const [caption,setCaption]=useState();
+    const [imageList,setImageList]=useState();
+    const {videoData,setVideoData} = useContext(VideoDataContext)
 
     const onHandleInputChange = (fieldName, fieldValue) => {
         console.log(fieldName, fieldValue);
@@ -30,22 +37,117 @@ function CreateNew() {
     //console.log("formData", formData);
 
     const clickHandler = () => {
-        GetVideoScript();
+            GetVideoScript();
+            //GenerateImage()
     };
 
     // get video script
     const GetVideoScript = async() => {
         setloading(true)
         const prompt = "Write a script to generate " + formData.duration + " video on topic : " + formData.topic + " along with AI image prompt in " + formData.imageStyle + " format for each scene and give me result in JSON format with imagePrompt and ContentText as field,No plain text";
-        //console.log(prompt);
-        const result = await axios.post('/api/get-video-script',{
+        console.log("This is getvideo prompt \n",prompt);
+        const response = await axios.post('/api/get-video-script',{
             prompt:prompt
         })
-        setVideoScript(result.data.result);
-        //console.log(result,"resulttt")
-        setloading(false)
-        console.log(videoScript)
+        console.log("This is videoScript response \n",response.data);
+        if(response.data.result){
+            setVideoData(prev=>({
+                ...prev,
+                "videoScript":response.data.result
+            }))
+        }
+        setVideoScript(response.data.result);
+        GenerateAudioFile(response.data.result);
+        //setloading(false);
     };
+
+    //get audio file
+    const GenerateAudioFile = async (videoScriptData) => {
+    setloading(true);
+    let script = "";
+    const uid = uuidv4();
+
+    videoScriptData.forEach(item => {
+        script = script + item.contentText + " ";
+    });
+    console.log("This is audio text\n",script);
+
+    try {
+        const response = await axios.post('/api/generate-audio', {
+            text: script,
+            id: uid
+        });
+        setAudioFileUrl(response.data.audioFileUrl);
+        console.log("This is generateAudioFile response\n",response.data);
+        if(response.data.result){
+            setVideoData(prev=>({
+                ...prev,
+                "GenerateAudioFile":response.data.result
+            }))
+        }
+        response.data.audioFileUrl && GenerateAudioCaption(response.data.audioFileUrl, videoScriptData);
+
+        } catch (error) {
+        console.error('Error generating audio file:', error);
+        
+        }
+        //setloading(false);
+
+    };
+
+    //generate caption
+    const GenerateAudioCaption = async (fileUrl, videoScriptData) => {
+        setloading(true);
+
+        const response = await axios.post("/api/generate-caption",{
+            audioFileUrl:fileUrl,
+        })
+        setCaption(response?.data?.result);
+        setVideoData(prev=>({
+                ...prev,
+                "GenerateAudioFile":response.data.result
+            }))
+        response?.data?.result&&GenerateImage(videoScriptData)
+        if(response.data.result){
+            setVideoData(prev=>({
+                ...prev,
+                "AudioCaption":response.data.result
+            }))
+        }
+        console.log("This is generateAudioCaption response\n",response.data);
+        //setloading(false);
+    }
+    //generate image
+    const GenerateImage = async (videoScriptData) => {
+    try {
+        let images = [];
+        console.log("This is videoScript of use state", videoScriptData);
+        for (const element of videoScriptData) {
+            const response = await axios.post('/api/generate-image', {
+                prompt: element?.imagePrompt
+            });
+            images.push(response.data.result);
+            console.log("This is GenerateImage response\n",response.data.result);
+        }
+        console.log("Images Array", images);
+        setImageList(images);
+        if(images){
+            setVideoData(prev=>({
+                ...prev,
+                "ImageList":images
+            }))
+        }
+        setloading(false);
+    } catch (error) {
+        console.error("Error generating image:", error);
+    }
+    };
+
+
+    useEffect(()=>{
+            console.log(videoData)
+    },[videoData])
+
 
     return (
         <div className='md:px-20'>
@@ -66,6 +168,11 @@ function CreateNew() {
             <CustomLoading loading={loading}/>
         </div>
     );
+        
+}catch(err){
+    setloading(false)
+    console.log(err);
+    }
 }
 
 export default CreateNew;

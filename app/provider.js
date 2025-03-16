@@ -7,9 +7,9 @@ import React, { use, useEffect } from 'react'
 
 const Provider = ({children}) => {
   const {user} = useUser();
-useEffect(()=>{
-  user&&isNewUser();
-},[user])
+  useEffect(()=>{
+    user&&isNewUser();
+  },[user])
   
   console.log("user",user);
   const isNewUser=async()=>{
