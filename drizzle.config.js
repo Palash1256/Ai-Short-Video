@@ -5,6 +5,5 @@ export default {
     dialect:'postgresql',
     dbCredentials:{
         url: process.env.NEXT_PUBLIC_DRIZZLE_DATABASE_URL,
-
     }
 }
