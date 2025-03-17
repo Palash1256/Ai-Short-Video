@@ -1,8 +1,10 @@
 /** @type {import("drizzle-kit").Config} */
+require('dotenv').config()
 export default {
     schema:"./configs/schema.js",
     dialect:'postgresql',
     dbCredentials:{
-        url:"postgresql://ai-short-video-data_owner:npg_NXSO8WfDPqu7@ep-calm-frog-a151dalc-pooler.ap-southeast-1.aws.neon.tech/ai-short-video-data?sslmode=require"
+        url: process.env.NEXT_PUBLIC_DRIZZLE_DATABASE_URL,
+
     }
 }
