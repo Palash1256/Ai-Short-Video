@@ -84,14 +84,3 @@ We welcome contributions! To contribute:
 5. Open a pull request.
 
 ---
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-## 📧 Contact
-
-For any inquiries, please contact us at [your-email@example.com](mailto:your-email@example.com).
-
