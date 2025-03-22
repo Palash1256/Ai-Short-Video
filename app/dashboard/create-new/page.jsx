@@ -1,3 +1,4 @@
+
 "use client"
 import React, { useContext, useEffect, useState } from 'react';
 import SelectTopic from './_components/SelectTopic';
@@ -8,6 +9,10 @@ import axios from 'axios';
 import CustomLoading from './_components/CustomLoading';
 import { v4 as uuidv4 } from 'uuid';
 import { VideoDataContext } from '@/app/_context/VideoDataContext';
+import { db } from '@/configs/db';
+import { videoTable } from '@/configs/schema';
+import { useUser } from '@clerk/nextjs';
+
 
 function CreateNew() {
     try{
@@ -19,6 +24,7 @@ function CreateNew() {
     const [caption,setCaption]=useState();
     const [imageList,setImageList]=useState();
     const {videoData,setVideoData} = useContext(VideoDataContext)
+    const {user} = useUser()
 
     const onHandleInputChange = (fieldName, fieldValue) => {
         console.log(fieldName, fieldValue);
@@ -78,11 +84,12 @@ function CreateNew() {
             id: uid
         });
         setAudioFileUrl(response.data.audioFileUrl);
-        console.log("This is generateAudioFile response\n",response.data);
-        if(response.data.result){
+        console.log("This is generateAudioFile response\n",response.data.audioFileUrl);
+        if(response.data.audioFileUrl){
             setVideoData(prev=>({
                 ...prev,
-                "GenerateAudioFile":response.data.result
+                "audioFileUrl":response.data.audioFileUrl,
+                "id":uid
             }))
         }
         response.data.audioFileUrl && GenerateAudioCaption(response.data.audioFileUrl, videoScriptData);
@@ -103,15 +110,11 @@ function CreateNew() {
             audioFileUrl:fileUrl,
         })
         setCaption(response?.data?.result);
-        setVideoData(prev=>({
-                ...prev,
-                "GenerateAudioFile":response.data.result
-            }))
         response?.data?.result&&GenerateImage(videoScriptData)
         if(response.data.result){
             setVideoData(prev=>({
                 ...prev,
-                "AudioCaption":response.data.result
+                "audioCaption":response.data.result
             }))
         }
         console.log("This is generateAudioCaption response\n",response.data);
@@ -134,7 +137,7 @@ function CreateNew() {
         if(images){
             setVideoData(prev=>({
                 ...prev,
-                "ImageList":images
+                "imageList":images
             }))
         }
         setloading(false);
@@ -146,7 +149,31 @@ function CreateNew() {
 
     useEffect(()=>{
             console.log(videoData)
+             if (Object.keys(videoData).length === 5) {
+            saveVideoData(videoData);
+        }
+
     },[videoData])
+
+     const saveVideoData = async (videoData) => {
+        try {
+            setloading(true);
+            const result = await db.insert(videoTable).values([{
+            audioCaption: videoData?.audioCaption,
+            audioFileUrl: videoData?.audioFileUrl,
+            videoScript: videoData?.videoScript,
+            imageList: videoData?.imageList,
+            createdBy: user?.primaryEmailAddress?.emailAddress
+            }]).returning({id:videoTable?.id});
+
+            console.log("Save video data result\n", result);
+            setloading(false);
+        } catch (error) {
+            console.error("Error saving video data:", error);
+        }
+    };
+
+
 
 
     return (

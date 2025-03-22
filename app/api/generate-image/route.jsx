@@ -34,8 +34,8 @@ export async function POST(req, res) {
 
         // Save the generated image to Cloudinary
         const uploadResponse = await cloudinary.uploader.upload(imageUrl, {
-            
-            public_id: `ai-short-video-images/${Date.now()}`
+            folder: "ai-short-video-images", 
+            public_id: `${Date.now()}`
         });
 
         console.log("Cloudinary upload response", uploadResponse);
