@@ -84,5 +84,3 @@ We welcome contributions! To contribute:
 5. Open a pull request.
 
 ---
-
-helloooo shreya
