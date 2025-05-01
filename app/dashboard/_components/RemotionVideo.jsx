@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   AbsoluteFill,
   Sequence,
@@ -8,6 +8,7 @@ import {
   useCurrentFrame,
 } from "remotion";
 import { interpolate } from "remotion";
+
 function RemotionVideo({
   videoScript,
   imageList,
@@ -25,23 +26,21 @@ function RemotionVideo({
   );
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
+
   const getDurationFrames = () => {
-    setDurationInFrame(
-      (audioCaption[audioCaption?.length - 1]?.end / 1000) * fps
-    );
     return (audioCaption[audioCaption?.length - 1]?.end / 1000) * fps;
   };
-  // const getDurationFrames = () => {
-  //   const duration = (audioCaption[audioCaption?.length - 1]?.endTime / 1000) * fps;
-  //  //if (typeof setDurationInFrame === "function") {
-  //     setDurationInFrame(duration);
-  //   //}
-  //   console.log("duration",duration)
-  //   return duration;
-  // };
+
+  useEffect(() => {
+    // Set the duration in frames after the component has mounted
+    if (audioCaption?.length > 0) {
+      const duration = getDurationFrames();
+      setDurationInFrame(duration);
+    }
+  }, [audioCaption, fps, setDurationInFrame]);
 
   const getCurrentCaptions = () => {
-    const currentTime = (frame / 30) * 1000; //convert frame number to millisecond (30fps)
+    const currentTime = (frame / fps) * 1000; // Convert frame number to milliseconds
     const currentCaption = audioCaption.find(
       (word) => word.start && currentTime <= word.end
     );
@@ -51,63 +50,60 @@ function RemotionVideo({
   return (
     videoScript && (
       <AbsoluteFill className="bg-black">
-        {imageList?.map((item, index) => {
-          const startTime = (index * getDurationFrames()) / imageList?.length;
-          const duration = getDurationFrames();
-          const scale = (index)=> interpolate(
-            frame,
-            [startTime, startTime + duration / 2, startTime + duration],
-            index%2==0 ? [1, 1.8, 1]:[1.8,1,1.8],
-            { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-            // zoom in zoom out
-          );
+        {imageList
+          ?.filter((item) => item) // Filter out undefined or invalid items
+          .map((item, index) => {
+            const startTime = (index * getDurationFrames()) / imageList?.length;
+            const duration = getDurationFrames();
+            const scale = (index) =>
+              interpolate(
+                frame,
+                [startTime, startTime + duration / 2, startTime + duration],
+                index % 2 === 0 ? [1, 1.8, 1] : [1.8, 1, 1.8],
+                { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+              );
 
-          return (
-            <div key={index}>
-              console.log("item...................",item)
-              <Sequence
-                key={index}
-                from={startTime}
-                durationInFrames={getDurationFrames()}
-              >
-                <AbsoluteFill
-                  style={{ justifyContent: "center", alignItems: "center" }}
+            return (
+              <div key={index}>
+                <Sequence
+                  key={index}
+                  from={startTime}
+                  durationInFrames={getDurationFrames()}
                 >
-                  <Img
-                    key={index}
-                    src={item}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      transform: `scale(${scale(index)})`,
-                    }}
-                  />
-
                   <AbsoluteFill
-                    style={{
-                      color: "white",
-                      bottom: 50,
-                      height: 150,
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      // alignItems: "center",
-                      top:"undefined",
-                      textAlign: "center",
-                      // important to come above image
-                    }}
+                    style={{ justifyContent: "center", alignItems: "center" }}
                   >
-                    <h2 className="text-2xl">{getCurrentCaptions()}</h2>
-                  </AbsoluteFill>
-                </AbsoluteFill>
-              </Sequence>
-            </div>
-          );
-        })}
+                    <Img
+                      key={index}
+                      src={item}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        transform: `scale(${scale(index)})`,
+                      }}
+                    />
 
-        <Audio src={audioFileUrl}/>
-        {/* {audioFileUrl && <Audio src={audioFileUrl} />} */}
+                    <AbsoluteFill
+                      style={{
+                        color: "white",
+                        bottom: 50,
+                        height: 150,
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        textAlign: "center",
+                      }}
+                    >
+                      <h2 className="text-2xl">{getCurrentCaptions()}</h2>
+                    </AbsoluteFill>
+                  </AbsoluteFill>
+                </Sequence>
+              </div>
+            );
+          })}
+
+        {audioFileUrl && <Audio src={audioFileUrl} />}
       </AbsoluteFill>
     )
   );
