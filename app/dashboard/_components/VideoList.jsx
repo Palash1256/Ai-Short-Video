@@ -9,12 +9,12 @@ function VideoList({ videoList }) {
   const [videoId, setVideoId] = useState();
 
   return (
-    <div className="mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full  gap-15">
+     <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 w-full">
       {videoList?.map((video, index) => {
         return (
           <div
             key={index}
-            className="cusor-pointer hover:scale-105 transition-all"
+            className="cursor-pointer hover:scale-105 transition-all w-fit"
             onClick={() => {
               setOpenPlayerDialog(Date.now());
               setVideoId(video?.id);
