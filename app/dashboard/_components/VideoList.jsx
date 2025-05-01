@@ -9,7 +9,7 @@ function VideoList({ videoList }) {
   const [videoId, setVideoId] = useState();
 
   return (
-    <div className="mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-19 ">
+    <div className="mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full  gap-15">
       {videoList?.map((video, index) => {
         return (
           <div
@@ -29,9 +29,8 @@ function VideoList({ videoList }) {
               fps={30}
               style={{
                 borderRadius: 15,
-                margin: "12px",
-                padding: "34px",
-                backgroundColor: "#f0f0f0",
+                // margin: "12px",
+                // padding: "34px",
               }}
               inputProps={{
                 ...video,
