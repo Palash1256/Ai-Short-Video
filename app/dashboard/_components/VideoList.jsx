@@ -1,0 +1,50 @@
+import React from "react";
+import { Thumbnail } from "@remotion/player";
+import RemotionVideo from "./RemotionVideo";
+import PlayerDialog from "./PlayerDialog";
+import { useState } from "react";
+function VideoList({ videoList }) {
+  console.log("video list data", videoList);
+  const [openPlayDialog, setOpenPlayerDialog] = useState(false);
+  const [videoId, setVideoId] = useState();
+
+  return (
+    <div className="mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 lg:gap-19 ">
+      {videoList?.map((video, index) => {
+        return (
+          <div
+            key={index}
+            className="cusor-pointer hover:scale-105 transition-all"
+            onClick={() => {
+              setOpenPlayerDialog(Date.now());
+              setVideoId(video?.id);
+            }}
+          >
+            <Thumbnail
+              component={RemotionVideo}
+              compositionWidth={250}
+              compositionHeight={300}
+              frameToDisplay={30}
+              durationInFrames={120}
+              fps={30}
+              style={{
+                borderRadius: 15,
+                margin: "12px",
+                padding: "34px",
+                backgroundColor: "#f0f0f0",
+              }}
+              inputProps={{
+                ...video,
+                setDurationInFrame: (v) => console.log(v),
+              }}
+            />
+          </div>
+        );
+      })}
+
+      <PlayerDialog playVideo={openPlayDialog} videoId={videoId} />
+    </div>
+  );
+}
+
+export default VideoList;

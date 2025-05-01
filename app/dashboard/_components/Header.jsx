@@ -1,10 +1,12 @@
+// import { UserDetailContext } from '@/app/_context/UserDetailContext'
 import { Button } from '@/components/ui/button'
 import { UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useContext } from 'react'
 
 function Header() {
+  // const {userDetail,setUserDetail}= useContext(UserDetailContext)
   return (
     <div className='p-3 px-5 flex justify-between items-center shadow-md' >
       <div className='flex gap-3 items-center'>
@@ -12,6 +14,11 @@ function Header() {
         <h2 className='font-bold text-xl'>Ai Short Video</h2>
       </div>
       <div className='flex gap-3 items-center'>
+    
+    {/* <div className='flex gap-2 items-center'>
+      <Image src={'/star.png'} width={20} height={20} alt=''/>
+      <h2>{userDetail?.credits}</h2>
+    </div> */}
         <Link href={"/dashboard"}>
           <Button>Dashboard</Button>
         </Link>
