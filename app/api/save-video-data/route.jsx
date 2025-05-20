@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
     try {
         const { videoData, userData } = await req.json(); // Destructure first
-        console.log(videoData); // Log after destructuring
+        // console.log(videoData); // Log after destructuring
 
         const result = await db.insert(videoTable).values({
             audioCaption: videoData?.audioCaption,
@@ -17,11 +17,11 @@ export async function POST(req) {
             createdBy: userData
         })
 
-        console.log("Save video data result\n", result);
+        // console.log("Save video data result\n", result);
         //console.log("Server side save-video-data", result);
         return NextResponse.json({ "result": result });
     } catch (e) {
-        console.log("Error in get-video-script", e);
+        // console.log("Error in get-video-script", e);
         return NextResponse.json({ "Error in get-video-script": e });
     }
 }

@@ -4,12 +4,12 @@ import RemotionVideo from "./RemotionVideo";
 import PlayerDialog from "./PlayerDialog";
 import { useState } from "react";
 function VideoList({ videoList }) {
-  console.log("video list data", videoList);
+  // console.log("video list data", videoList);
   const [openPlayDialog, setOpenPlayerDialog] = useState(false);
   const [videoId, setVideoId] = useState();
 
   return (
-     <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 w-full">
+     <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 justify-center items-center md:grid-cols-3 lg:grid-cols-4 gap-5 w-full">
       {videoList?.map((video, index) => {
         return (
           <div

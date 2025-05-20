@@ -30,7 +30,7 @@ function PlayerDialog({ playVideo, videoId }) {
       .select()
       .from(videoTable)
       .where(eq(videoTable.id, videoId));
-    console.log("Video Data Fetched:", result);
+    // console.log("Video Data Fetched:", result);
     setVideoData(result[0]);
   };
 

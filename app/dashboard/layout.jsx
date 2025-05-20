@@ -14,16 +14,6 @@ function DashboardLayout({ children }) {
   // const [userDetail, setUserDetail] = useState([]);
   const { user } = useUser();
 
-  // useEffect(() => {
-  //   user && getUserDetails();
-  // }, [user]);
-  // const getUserDetails = async () => {
-  //   const result = await db
-  //     .select()
-  //     .from(Users)
-  //     .where(eq(Users.email, user?.primaryEmailAddress?.emailAddress));
-  //   setUserDetail(result[0]);
-  // };
   return (
     // <UserDetailContext.Provider value={{ userDetail, setUserDetail }}>
       <VideoDataContext.Provider value={{ videoData, setVideoData }}>

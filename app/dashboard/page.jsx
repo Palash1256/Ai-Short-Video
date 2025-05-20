@@ -16,7 +16,7 @@ import { eq } from "drizzle-orm";
 function Dashboard() {
   const [videoList, setVideoList] = useState([]);
   const { user } = useUser();
-  console.log("user tryy ", user);
+  // console.log("user tryy ", user);
   useEffect(() => {
    user && GetVideoList();
   }, [user]);
@@ -32,7 +32,7 @@ function Dashboard() {
       .where(
         eq(videoTable?.createdBy, user?.primaryEmailAddress?.emailAddress)
       );
-    console.log("result........=", result);
+    // console.log("result........=", result);
     setVideoList(result);
   };
   // GetVideoList();
@@ -54,7 +54,7 @@ function Dashboard() {
 
       {/*List of vedios*/}
 
-      <VideoList videoList={videoList} />
+      <VideoList videoList={videoList}  className="flex justify-center items-center"/>
     </div>
   );
 }

@@ -18,8 +18,6 @@ export async function POST(req, res) {
 
         const output = await replicate.run("bytedance/sdxl-lightning-4step:5599ed30703defd1d160a25a63321b4dec97101d98b4674bcc56e41f62f35637", { input });
 
-        console.log("Image output", output);
-
         // Convert ReadableStream to a base64 string
         const reader = output[0].getReader();
         let chunks = [];
@@ -37,8 +35,6 @@ export async function POST(req, res) {
             folder: "ai-short-video-images", 
             public_id: `${Date.now()}`
         });
-
-        console.log("Cloudinary upload response", uploadResponse);
 
         // Return the image link
         return NextResponse.json({ 'result': uploadResponse.secure_url });

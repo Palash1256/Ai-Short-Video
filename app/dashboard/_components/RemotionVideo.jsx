@@ -16,14 +16,14 @@ function RemotionVideo({
   audioCaption,
   setDurationInFrame,
 }) {
-  console.log(
-    "RemotionVideo Props",
-    videoScript,
-    imageList,
-    audioFileUrl,
-    audioCaption,
-    setDurationInFrame
-  );
+  // console.log(
+  //   "RemotionVideo Props",
+  //   videoScript,
+  //   imageList,
+  //   audioFileUrl,
+  //   audioCaption,
+  //   setDurationInFrame
+  // );
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
 

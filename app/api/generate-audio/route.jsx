@@ -33,7 +33,7 @@ export async function POST(req) {
     uploadStream.end(audioBuffer);
   });
 
-  console.log("Audio file uploaded to Cloudinary:", result.secure_url);
+  // console.log("Audio file uploaded to Cloudinary:", result.secure_url);
 
   return NextResponse.json({ result: "Success", audioFileUrl: result.secure_url });
 }

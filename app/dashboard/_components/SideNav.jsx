@@ -28,13 +28,13 @@ function SideNav(){
     {
         id:4,
         name:'Account',
-        path:'/account',
+        path:'/dashboard/account',
         icon:icons,
         icon:CircleUser
-    },
+    }
 ]
 const path=usePathname();
-console.log('path',path);
+// console.log('path',path);
 
     return(
         <div className='w-64 h-screen shadow-md p-5'>

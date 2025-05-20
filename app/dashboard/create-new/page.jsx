@@ -36,7 +36,7 @@ function CreateNew() {
     const { user } = useUser();
 
     const onHandleInputChange = (fieldName, fieldValue) => {
-      console.log(fieldName, fieldValue);
+      // console.log(fieldName, fieldValue);
       setFormData((prev) => {
         const updatedFormData = {
           ...prev,
@@ -76,11 +76,11 @@ function CreateNew() {
         " along with AI image prompt in " +
         formData.imageStyle +
         " format for each scene and give me result in JSON format with imagePrompt and ContentText as field,No plain text";
-      console.log("This is getvideo prompt \n", prompt);
+      // console.log("This is getvideo prompt \n", prompt);
       const response = await axios.post("/api/get-video-script", {
         prompt: prompt,
       });
-      console.log("This is videoScript response \n", response.data);
+      // console.log("This is videoScript response \n", response.data);
       if (response.data.result) {
         setVideoData((prev) => ({
           ...prev,
@@ -101,7 +101,7 @@ function CreateNew() {
       videoScriptData.forEach((item) => {
         script = script + item.contentText + " ";
       });
-      console.log("This is audio text\n", script);
+      // console.log("This is audio text\n", script);
 
       try {
         const response = await axios.post("/api/generate-audio", {
@@ -109,10 +109,10 @@ function CreateNew() {
           id: uid,
         });
         setAudioFileUrl(response.data.audioFileUrl);
-        console.log(
-          "This is generateAudioFile response\n",
-          response.data.audioFileUrl
-        );
+        // console.log(
+        //   "This is generateAudioFile response\n",
+        //   response.data.audioFileUrl
+        // );
         if (response.data.audioFileUrl) {
           setVideoData((prev) => ({
             ...prev,
@@ -143,22 +143,22 @@ function CreateNew() {
           audioCaption: response.data.result,
         }));
       }
-      console.log("This is generateAudioCaption response\n", response.data);
+      // console.log("This is generateAudioCaption response\n", response.data);
       //setloading(false);
     };
     //generate image
     const GenerateImage = async (videoScriptData) => {
       try {
         let images = [];
-        console.log("This is videoScript of use state", videoScriptData);
+        // console.log("This is videoScript of use state", videoScriptData);
         for (const element of videoScriptData) {
           const response = await axios.post("/api/generate-image", {
             prompt: element?.imagePrompt,
           });
           images.push(response.data.result);
-          console.log("This is GenerateImage response\n", response.data.result);
+          // console.log("This is GenerateImage response\n", response.data.result);
         }
-        console.log("Images Array", images);
+        // console.log("Images Array", images);
         setImageList(images);
         if (images) {
           setVideoData((prev) => ({
@@ -173,7 +173,7 @@ function CreateNew() {
     };
 
     useEffect(() => {
-      console.log(videoData);
+      // console.log(videoData);
       if (Object.keys(videoData).length === 5) {
         saveVideoData(videoData);
       }
@@ -197,8 +197,8 @@ function CreateNew() {
         // await UpdateUserCredits();
         setVideoid(result[0]?.id);
         setPlayVideo(true);
-        console.log("This is videoId", result[0]?.id);
-        console.log("Save video data result\n", result);
+        // console.log("This is videoId", result[0]?.id);
+        // console.log("Save video data result\n", result);
         setloading(false);
       } catch (error) {
         console.error("Error saving video data:", error);
