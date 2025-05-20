@@ -11,7 +11,6 @@ const Provider = ({ children }) => {
     user && isNewUser();
   }, [user])
 
-  // console.log("user",user);
   const isNewUser = async () => {
     const result = await db.select().from(Users).where(eq(Users.email, user?.primaryEmailAddress?.emailAddress));
     // console.log("result", result);

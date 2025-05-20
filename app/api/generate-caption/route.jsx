@@ -17,6 +17,7 @@ export async function POST(req,res){
     return NextResponse.json({result:transcript.words})
 }
 catch(err){
+    // console.log(err);
     NextResponse.json({"Error in generate-caption ":err});
 }
 }

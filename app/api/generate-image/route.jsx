@@ -39,7 +39,7 @@ export async function POST(req, res) {
         // Return the image link
         return NextResponse.json({ 'result': uploadResponse.secure_url });
     } catch (error) {
-        console.log({ "Error in image-generate": error });
+        // console.log({ "Error in image-generate": error });
         return NextResponse.json({ "Error in image-generate": error });
     }
 }

@@ -11,6 +11,7 @@ export async function POST(req){
         //console.log(result.response.text());
         return NextResponse.json({"result":JSON.parse(result.response.text())})
     } catch (e) {
+        //console.log(e)
         return NextResponse.json({"Error in get-video-script":e})
     }
 }

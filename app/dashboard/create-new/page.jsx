@@ -248,7 +248,7 @@ function CreateNew() {
     );
   } catch (err) {
     setloading(false);
-    console.log(err);
+    // console.log(err);
   }
 }
 
